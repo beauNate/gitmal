@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/antonmedv/gitmal/pkg/git"
+	"github.com/antonmedv/gitmal/pkg/links"
 	"github.com/antonmedv/gitmal/pkg/templates"
 )
 
@@ -26,6 +27,9 @@ func generateIndex(files []git.Blob, params Params) error {
 		dirs[p] = di
 		return di
 	}
+
+	dirsSet := links.BuildDirSet(files)
+	filesSet := links.BuildFileSet(files)
 
 	for _, b := range files {
 		// Normalize to forward slash paths for URL construction
@@ -92,7 +96,7 @@ func generateIndex(files []git.Blob, params Params) error {
 	}
 
 	rootHref := "./"
-	readmeHTML := readme(di.files, params, rootHref)
+	readmeHTML := readme(di.files, dirsSet, filesSet, params, rootHref)
 
 	err = templates.ListTemplate.ExecuteTemplate(f, "layout.gohtml", templates.ListParams{
 		LayoutParams: templates.LayoutParams{

@@ -9,11 +9,8 @@ import (
 	"github.com/antonmedv/gitmal/pkg/links"
 )
 
-func readme(files []git.Blob, params Params, rootHref string) template.HTML {
+func readme(files []git.Blob, dirsSet, filesSet links.Set, params Params, rootHref string) template.HTML {
 	var readmeHTML template.HTML
-
-	dirsSet := links.BuildDirSet(files)
-	filesSet := links.BuildFileSet(files)
 
 	md := createMarkdown(params.Style)
 

@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	"github.com/antonmedv/gitmal/pkg/git"
+	"github.com/antonmedv/gitmal/pkg/links"
 	"github.com/antonmedv/gitmal/pkg/progress_bar"
 	"github.com/antonmedv/gitmal/pkg/templates"
 )
@@ -32,6 +33,9 @@ func generateLists(files []git.Blob, params Params) error {
 		dirs[p] = di
 		return di
 	}
+
+	dirsSet := links.BuildDirSet(files)
+	filesSet := links.BuildFileSet(files)
 
 	for _, b := range files {
 		// Normalize to forward slash paths for URL construction
@@ -171,7 +175,7 @@ func generateLists(files []git.Blob, params Params) error {
 					}
 					rootHref := strings.Repeat("../", depth+2)
 
-					readmeHTML := readme(di.files, params, rootHref)
+					readmeHTML := readme(di.files, dirsSet, filesSet, params, rootHref)
 					var CSSMarkdown template.CSS
 					if readmeHTML != "" {
 						CSSMarkdown = cssMarkdown(params.Dark)
