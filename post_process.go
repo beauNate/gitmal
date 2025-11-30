@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"compress/gzip"
 	"io"
 	"io/fs"
@@ -127,7 +128,7 @@ func writeGzip(path string, data []byte) error {
 	defer func() { _ = f.Close() }()
 	gw := gzip.NewWriter(f)
 	gw.Name = filepath.Base(strings.TrimSuffix(path, ".gz"))
-	if _, err := io.Copy(gw, strings.NewReader(string(data))); err != nil {
+	if _, err := io.Copy(gw, bytes.NewReader(data)); err != nil {
 		_ = gw.Close()
 		return err
 	}
