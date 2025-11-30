@@ -183,6 +183,16 @@
         font-size: var(--code-font-size);
       }
 
+      .binary-file {
+        padding: 8px 16px;
+        font-style: italic;
+
+        border: 1px solid var(--c-border);
+        border-top: none;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+      }
+
       {{ .DiffCSS }}
     </style>
 {{ end }}
@@ -249,9 +259,13 @@
                             </button>
                         </header>
                     </div>
-                    <div class="file-diff">
-                        {{ .HTML }}
-                    </div>
+                    {{ if .IsBinary }}
+                        <div class="binary-file">Binary file</div>
+                    {{ else }}
+                        <div class="file-diff">
+                            {{ .HTML }}
+                        </div>
+                    {{ end }}
                 </section>
             {{ end }}
         </div>

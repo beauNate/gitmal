@@ -196,6 +196,7 @@ type FileView struct {
 	IsNew    bool
 	IsDelete bool
 	IsRename bool
+	IsBinary bool
 	HTML     HTML // pre-rendered HTML for diff of this file
 }
 

@@ -208,6 +208,7 @@ func generateCommitPage(commit git.Commit, params Params) error {
 			IsNew:    f.IsNew,
 			IsDelete: f.IsDelete,
 			IsRename: f.IsRename,
+			IsBinary: f.IsBinary,
 			HTML:     template.HTML(buf.String()),
 		})
 	}
