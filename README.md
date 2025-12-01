@@ -11,6 +11,10 @@ code highlighting, and markdown rendering.
 go install github.com/antonmedv/gitmal@latest
 ```
 
+```sh
+docker run --rm -v $(pwd):/repo antonmedv/gitmal /repo
+```
+
 ## Usage
 
 Run gitmal in the repository dir. Gitmal will generate pages in _./output_ directory.
