@@ -157,6 +157,7 @@ func main() {
 
 	commits := make(map[string]git.Commit)
 	commitsFor := make(map[git.Ref][]git.Commit, len(branches))
+
 	for _, branch := range branches {
 		commitsFor[branch], err = git.Commits(branch, params.RepoDir)
 		if err != nil {
@@ -164,6 +165,16 @@ func main() {
 		}
 
 		for _, commit := range commitsFor[branch] {
+			commits[commit.Hash] = commit
+		}
+	}
+
+	for _, tag := range tags {
+		commitsForTag, err := git.Commits(git.Ref(tag.Name), params.RepoDir)
+		if err != nil {
+			panic(err)
+		}
+		for _, commit := range commitsForTag {
 			commits[commit.Hash] = commit
 		}
 	}
