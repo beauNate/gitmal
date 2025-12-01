@@ -12,8 +12,8 @@ import (
 
 var funcs = FuncMap{
 	"BaseName": filepath.Base,
-	"FormatDate": func(date time.Time) string {
-		return date.Format("2006-01-02 15:04:05")
+	"FormatDate": func(date time.Time) HTML {
+		return HTML(date.Format(`<span class="nowrap">2006-01-02</span> <span class="nowrap">15:04:05</span>`))
 	},
 	"ShortHash": func(hash string) string {
 		return hash[:7]

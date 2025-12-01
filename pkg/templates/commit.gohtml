@@ -26,6 +26,8 @@
       .commit-author {
         color: var(--c-text-1);
         font-weight: 600;
+        min-width: 0;
+        overflow-wrap: break-word;
       }
 
       .commit-date {
@@ -58,12 +60,15 @@
       .commit-subject {
         font-size: 16px;
         font-weight: 600;
+        line-height: 1.3;
+        hyphens: auto;
       }
 
       .commit-body {
         margin-top: 16px;
         white-space: pre-wrap;
         line-height: 1.5;
+        hyphens: auto;
       }
 
       .commit-subinfo {
