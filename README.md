@@ -40,6 +40,7 @@ gitmal --help
 ## Examples
 
 Here are a few examples of repos hosted on my website:
+
 - [git.medv.io/zx/](https://git.medv.io/zx/) — github.com/google/zx
 - [git.medv.io/zig/](https://git.medv.io/zig/) — codeberg.org/ziglang/zig (light theme)
 - [git.medv.io/my-badges/](https://git.medv.io/my-badges/) — github.com/my-badges/my-badges
@@ -54,6 +55,40 @@ Gitmal supports different code highlighting themes. You can customize the theme 
 ```sh
 gitmal --theme github-dark
 ```
+
+## Auto‑updates
+
+You can automatically regenerate the static files every time you push to a repository by using a `post-receive` hook.
+
+1. **Create a bare repository**
+
+   ```sh
+   git init --bare ~/myrepo.git
+   ```
+
+   Add it as a remote and push:
+
+   ```sh
+   git remote add origin user@server:~/myrepo.git
+   ```
+
+2. **Add the post‑receive hook**
+
+   Create `~/myrepo.git/hooks/post-receive` with the following contents and make it executable:
+
+   ```sh
+   #!/bin/sh
+   
+   NO_OUTPUT_DIR_CHECK=1 /path-to/gitmal --output /var/www/myrepo
+   ```
+
+   And make it executable:
+
+   ```sh
+   chmod +x ~/myrepo.git/hooks/post-receive
+   ```
+
+   Now, every `git push` will trigger a rebuild.
 
 ## License
 
