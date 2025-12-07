@@ -31,7 +31,7 @@ func Branches(repoDir string, filter *regexp.Regexp, defaultBranch string) ([]Re
 		if filter != nil && !filter.MatchString(line) && line != defaultBranch {
 			continue
 		}
-		branches = append(branches, Ref(line))
+		branches = append(branches, NewRef(line))
 	}
 	return branches, nil
 }
@@ -88,13 +88,13 @@ func Tags(repoDir string) ([]Tag, error) {
 }
 
 func Files(ref Ref, repoDir string) ([]Blob, error) {
-	if ref == "" {
-		ref = "HEAD"
+	if ref.IsEmpty() {
+		ref = NewRef("HEAD")
 	}
 
 	// -r: recurse into subtrees
 	// -l: include blob size
-	cmd := exec.Command("git", "ls-tree", "--full-tree", "-r", "-l", string(ref))
+	cmd := exec.Command("git", "ls-tree", "--full-tree", "-r", "-l", ref.String())
 	if repoDir != "" {
 		cmd.Dir = repoDir
 	}
@@ -196,11 +196,11 @@ func Files(ref Ref, repoDir string) ([]Blob, error) {
 }
 
 func BlobContent(ref Ref, path string, repoDir string) ([]byte, bool, error) {
-	if ref == "" {
-		ref = "HEAD"
+	if ref.IsEmpty() {
+		ref = NewRef("HEAD")
 	}
 	// Use `git show ref:path` to get the blob content at that ref
-	cmd := exec.Command("git", "show", string(ref)+":"+path)
+	cmd := exec.Command("git", "show", ref.String()+":"+path)
 	if repoDir != "" {
 		cmd.Dir = repoDir
 	}
@@ -233,7 +233,7 @@ func Commits(ref Ref, repoDir string) ([]Commit, error) {
 		"--date=unix",
 		"--pretty=format:" + strings.Join(format, "\x1F"),
 		"-z", // Separate the commits with NULs instead of newlines
-		string(ref),
+		ref.String(),
 	}
 
 	cmd := exec.Command("git", args...)

@@ -27,7 +27,14 @@ func readme(files []git.Blob, dirsSet, filesSet links.Set, params Params, rootHr
 			}
 
 			// Fix links/images relative to README location
-			htmlStr := links.Resolve(buf.String(), b.Path, rootHref, string(params.Ref), dirsSet, filesSet)
+			htmlStr := links.Resolve(
+				buf.String(),
+				b.Path,
+				rootHref,
+				params.Ref.DirName(),
+				dirsSet,
+				filesSet,
+			)
 
 			readmeHTML = template.HTML(htmlStr)
 			break

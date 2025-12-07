@@ -3,6 +3,7 @@ package git
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // ParseFileMode converts a git-style file mode (e.g. "100644")
@@ -73,4 +74,18 @@ func IsBinary(b []byte) bool {
 	}
 	// If more than 30% of sampled bytes are non-text, consider binary
 	return bad*100 > n*30
+}
+
+func RefToFileName(ref string) string {
+	var result strings.Builder
+	for _, c := range ref {
+		if (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' || c == '.' {
+			result.WriteByte(byte(c))
+		} else if c >= 'A' && c <= 'Z' {
+			result.WriteByte(byte(c - 'A' + 'a'))
+		} else {
+			result.WriteByte('-')
+		}
+	}
+	return result.String()
 }

@@ -19,12 +19,12 @@ func generateLogForBranch(allCommits []git.Commit, params Params) error {
 
 	// RootHref from commits/<branch>/... => ../../
 	rootHref := "../../"
-	outBase := filepath.Join(params.OutputDir, "commits", string(params.Ref))
+	outBase := filepath.Join(params.OutputDir, "commits", params.Ref.DirName())
 	if err := os.MkdirAll(outBase, 0o755); err != nil {
 		return err
 	}
 
-	p := progress_bar.NewProgressBar("commits for "+string(params.Ref), totalPages)
+	p := progress_bar.NewProgressBar("commits for "+params.Ref.String(), totalPages)
 
 	page := 1
 	for pageCommits := range slices.Chunk(allCommits, commitsPerPage) {
@@ -62,12 +62,12 @@ func generateLogForBranch(allCommits []git.Commit, params Params) error {
 
 		err = templates.CommitsListTemplate.ExecuteTemplate(f, "layout.gohtml", templates.CommitsListParams{
 			LayoutParams: templates.LayoutParams{
-				Title:      fmt.Sprintf("Commits %s %s", dot, params.Name),
-				Name:       params.Name,
-				Dark:       params.Dark,
-				RootHref:   rootHref,
-				CurrentRef: params.Ref,
-				Selected:   "commits",
+				Title:         fmt.Sprintf("Commits %s %s", dot, params.Name),
+				Name:          params.Name,
+				Dark:          params.Dark,
+				RootHref:      rootHref,
+				CurrentRefDir: params.Ref.DirName(),
+				Selected:      "commits",
 			},
 			HeaderParams: templates.HeaderParams{
 				Header: "Commits",

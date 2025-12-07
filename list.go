@@ -81,7 +81,7 @@ func generateLists(files []git.Blob, params Params) error {
 	errCh := make(chan error, 1)
 	var wg sync.WaitGroup
 
-	p := progress_bar.NewProgressBar("lists for "+string(params.Ref), len(jobsSlice))
+	p := progress_bar.NewProgressBar("lists for "+params.Ref.String(), len(jobsSlice))
 
 	check := func(err error) bool {
 		if err != nil {
@@ -109,7 +109,7 @@ func generateLists(files []git.Blob, params Params) error {
 					dirPath := jb.dirPath
 					di := jb.di
 
-					outDir := filepath.Join(params.OutputDir, "blob", string(params.Ref))
+					outDir := filepath.Join(params.OutputDir, "blob", params.Ref.DirName())
 					if dirPath != "" {
 						// convert forward slash path into OS path
 						outDir = filepath.Join(outDir, filepath.FromSlash(dirPath))
@@ -183,13 +183,13 @@ func generateLists(files []git.Blob, params Params) error {
 
 					err = templates.ListTemplate.ExecuteTemplate(f, "layout.gohtml", templates.ListParams{
 						LayoutParams: templates.LayoutParams{
-							Title:       title,
-							Name:        params.Name,
-							Dark:        params.Dark,
-							CSSMarkdown: CSSMarkdown,
-							RootHref:    rootHref,
-							CurrentRef:  params.Ref,
-							Selected:    "code",
+							Title:         title,
+							Name:          params.Name,
+							Dark:          params.Dark,
+							CSSMarkdown:   CSSMarkdown,
+							RootHref:      rootHref,
+							CurrentRefDir: params.Ref.DirName(),
+							Selected:      "code",
 						},
 						HeaderParams: templates.HeaderParams{
 							Ref:         params.Ref,

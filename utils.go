@@ -107,23 +107,20 @@ func isImage(path string) bool {
 
 func containsBranch(branches []git.Ref, branch string) bool {
 	for _, b := range branches {
-		if string(b) == branch {
+		if b.String() == branch {
 			return true
 		}
 	}
 	return false
 }
 
-func refToFileName(ref git.Ref) string {
-	var result strings.Builder
-	for _, c := range string(ref) {
-		if (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' || c == '.' {
-			result.WriteByte(byte(c))
-		} else if c >= 'A' && c <= 'Z' {
-			result.WriteByte(byte(c - 'A' + 'a'))
-		} else {
-			result.WriteByte('-')
+func hasConflictingBranchNames(branches []git.Ref) (bool, git.Ref, git.Ref) {
+	uniq := make(map[string]git.Ref, len(branches))
+	for _, b := range branches {
+		if a, exists := uniq[b.DirName()]; exists {
+			return true, a, b
 		}
+		uniq[b.DirName()] = b
 	}
-	return result.String()
+	return false, git.Ref{}, git.Ref{}
 }

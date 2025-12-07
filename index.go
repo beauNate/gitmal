@@ -72,7 +72,7 @@ func generateIndex(files []git.Blob, params Params) error {
 	for _, name := range dirNames {
 		subdirEntries = append(subdirEntries, templates.ListEntry{
 			Name:  name + "/",
-			Href:  "blob/" + string(params.Ref) + "/" + name + "/index.html",
+			Href:  "blob/" + params.Ref.DirName() + "/" + name + "/index.html",
 			IsDir: true,
 		})
 	}
@@ -81,7 +81,7 @@ func generateIndex(files []git.Blob, params Params) error {
 	for _, b := range di.files {
 		fileEntries = append(fileEntries, templates.ListEntry{
 			Name: b.FileName + "",
-			Href: "blob/" + string(params.Ref) + "/" + b.FileName + ".html",
+			Href: "blob/" + params.Ref.DirName() + "/" + b.FileName + ".html",
 			Mode: b.Mode,
 			Size: humanizeSize(b.Size),
 		})
@@ -100,13 +100,13 @@ func generateIndex(files []git.Blob, params Params) error {
 
 	err = templates.ListTemplate.ExecuteTemplate(f, "layout.gohtml", templates.ListParams{
 		LayoutParams: templates.LayoutParams{
-			Title:       title,
-			Name:        params.Name,
-			Dark:        params.Dark,
-			CSSMarkdown: cssMarkdown(params.Dark),
-			RootHref:    rootHref,
-			CurrentRef:  params.Ref,
-			Selected:    "code",
+			Title:         title,
+			Name:          params.Name,
+			Dark:          params.Dark,
+			CSSMarkdown:   cssMarkdown(params.Dark),
+			RootHref:      rootHref,
+			CurrentRefDir: params.Ref.DirName(),
+			Selected:      "code",
 		},
 		HeaderParams: templates.HeaderParams{
 			Ref:         params.Ref,

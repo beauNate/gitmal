@@ -135,6 +135,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	if yes, a, b := hasConflictingBranchNames(branches); yes {
+		echo(fmt.Sprintf("Conflicting branchs %q and %q, both want to use %q dir name.", a, b, a.DirName()))
+		os.Exit(1)
+	}
+
 	// Start generating pages
 
 	params := Params{
@@ -144,7 +149,7 @@ func main() {
 		OutputDir:  outputDir,
 		Style:      flagTheme,
 		Dark:       themeColor == "dark",
-		DefaultRef: git.Ref(flagDefaultBranch),
+		DefaultRef: git.NewRef(flagDefaultBranch),
 	}
 
 	commits := make(map[string]git.Commit)
@@ -165,13 +170,15 @@ func main() {
 		}
 	}
 
+	// Add commits from tags
 	for _, tag := range tags {
-		commitsForTag, err := git.Commits(git.Ref(tag.Name), params.RepoDir)
+		commitsForTag, err := git.Commits(git.NewRef(tag.Name), params.RepoDir)
 		if err != nil {
 			panic(err)
 		}
 		for _, commit := range commitsForTag {
-			if alreadyExisting, ok := commits[commit.Hash]; ok && alreadyExisting.Branch != "" {
+			// Only add new commits
+			if alreadyExisting, ok := commits[commit.Hash]; ok && !alreadyExisting.Branch.IsEmpty() {
 				continue
 			}
 			commits[commit.Hash] = commit
@@ -196,7 +203,7 @@ func main() {
 				panic(err)
 			}
 
-			if branch == git.Ref(flagDefaultBranch) {
+			if branch.String() == flagDefaultBranch {
 				defaultBranchFiles = files
 			}
 
@@ -220,7 +227,7 @@ func main() {
 	}
 
 	// Back to the default branch
-	params.Ref = git.Ref(flagDefaultBranch)
+	params.Ref = git.NewRef(flagDefaultBranch)
 
 	// Commits pages generation
 	echo("> generating commits...")

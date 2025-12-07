@@ -4,7 +4,29 @@ import (
 	"time"
 )
 
-type Ref string
+type Ref struct {
+	ref     string
+	dirName string
+}
+
+func NewRef(ref string) Ref {
+	return Ref{
+		ref:     ref,
+		dirName: RefToFileName(ref),
+	}
+}
+
+func (r Ref) IsEmpty() bool {
+	return r.ref == ""
+}
+
+func (r Ref) String() string {
+	return r.ref
+}
+
+func (r Ref) DirName() string {
+	return r.dirName
+}
 
 type Blob struct {
 	Ref      Ref
