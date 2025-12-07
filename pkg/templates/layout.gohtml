@@ -114,14 +114,19 @@
         }
 
         .menu {
+          background-color: var(--c-bg-alt);
+          border-bottom: 1px solid var(--c-divider);
+          overflow-x: auto;
+        }
+
+        .menu-content {
           display: flex;
           flex-direction: row;
           align-items: center;
           gap: 16px;
-          background-color: var(--c-bg-alt);
-          border-bottom: 1px solid var(--c-divider);
           padding-inline: 16px;
-          overflow-x: auto;
+          max-width: var(--max-content-width);
+          margin-inline: auto;
         }
 
         .menu-item {
@@ -266,38 +271,40 @@
 <body>
 {{ template "svg" . }}
 <div class="menu">
-    <a href="{{ .RootHref }}index.html" class="project-name">{{ .Name }}</a>
-    <div class="menu-item {{ if eq .Selected "code" }}selected{{ end }}">
-        <a href="{{ .RootHref }}blob/{{ .CurrentRefDir }}/index.html">
-            <svg aria-hidden="true" width="16" height="16">
-                <use xlink:href="#code"></use>
-            </svg>
-            Code
-        </a>
-    </div>
-    <div class="menu-item {{ if eq .Selected "branches" }}selected{{ end }}">
-        <a href="{{ .RootHref }}branches.html">
-            <svg aria-hidden="true" focusable="false" width="16" height="16">
-                <use xlink:href="#branch"></use>
-            </svg>
-            Branches
-        </a>
-    </div>
-    <div class="menu-item {{ if eq .Selected "tags" }}selected{{ end }}">
-        <a href="{{ .RootHref }}tags.html">
-            <svg aria-hidden="true" focusable="false" width="16" height="16">
-                <use xlink:href="#tag"></use>
-            </svg>
-            Tags
-        </a>
-    </div>
-    <div class="menu-item {{ if eq .Selected "commits" }}selected{{ end }}">
-        <a href="{{ .RootHref }}commits/{{ .CurrentRefDir }}/index.html">
-            <svg aria-hidden="true" focusable="false" width="16" height="16">
-                <use xlink:href="#commit"></use>
-            </svg>
-            Commits
-        </a>
+    <div class="menu-content">
+        <a href="{{ .RootHref }}index.html" class="project-name">{{ .Name }}</a>
+        <div class="menu-item {{ if eq .Selected "code" }}selected{{ end }}">
+            <a href="{{ .RootHref }}blob/{{ .CurrentRefDir }}/index.html">
+                <svg aria-hidden="true" width="16" height="16">
+                    <use xlink:href="#code"></use>
+                </svg>
+                Code
+            </a>
+        </div>
+        <div class="menu-item {{ if eq .Selected "branches" }}selected{{ end }}">
+            <a href="{{ .RootHref }}branches.html">
+                <svg aria-hidden="true" focusable="false" width="16" height="16">
+                    <use xlink:href="#branch"></use>
+                </svg>
+                Branches
+            </a>
+        </div>
+        <div class="menu-item {{ if eq .Selected "tags" }}selected{{ end }}">
+            <a href="{{ .RootHref }}tags.html">
+                <svg aria-hidden="true" focusable="false" width="16" height="16">
+                    <use xlink:href="#tag"></use>
+                </svg>
+                Tags
+            </a>
+        </div>
+        <div class="menu-item {{ if eq .Selected "commits" }}selected{{ end }}">
+            <a href="{{ .RootHref }}commits/{{ .CurrentRefDir }}/index.html">
+                <svg aria-hidden="true" focusable="false" width="16" height="16">
+                    <use xlink:href="#commit"></use>
+                </svg>
+                Commits
+            </a>
+        </div>
     </div>
 </div>
 <main>
