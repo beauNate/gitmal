@@ -8,7 +8,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o gitmal .
+RUN CGO_ENABLED=0 go build -o gitmal .
 
 FROM alpine
 
